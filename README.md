@@ -1,2 +1,2 @@
 # SchoolProjects
-School projects 
+CS211 Projects 
