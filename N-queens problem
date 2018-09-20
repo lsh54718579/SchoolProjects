@@ -1,0 +1,69 @@
+//
+//  main.cpp
+//  n queens problem
+//
+//  Created by Sihang Li on 10/23/17.
+//  Copyright © 2017 Sihang Li. All rights reserved.
+//
+#include <iostream>
+using namespace std;
+
+bool ok (int q[], int , int c);
+void backtrack (int q[],int &c,int n, int b, int counter);
+
+int main(){
+    int n,b;
+    cout<<"Input the number of rows and colums of the chessboard."<<endl;
+    cin>>n;
+    cout<<"Input the number of bishops."<<endl;
+    cin>>b;
+    int *q= new int [b];
+    int c=0, counter=0;  //Initializes first column to 0
+    q[0]=0;         //Initializes first column first row to 0
+    keepgoing: bool backtracked=false; //This is triggered only when moving to the next column
+    while (true){           //An infinite loop to test all possibilities
+        while (c<n){        //Maximum number of columns
+            if (backtracked==false)
+                q[c]=-1;    //Resets row to -1 for following increment if backtracked
+            backtracked=true;
+            
+            while (q[c]<n){ //Maximum number of rows
+                q[c]++;
+                if (q[c]==n){
+                    backtrack(q, c,n,b,counter);//Reaches the end of row and can't find a solution, backtracks to the previous column
+                    backtracked=true;
+                    break;      //After backtracking, breaks out of the row loop
+                }
+                if (ok (q,n,c)){
+                    backtracked=false;  //If a solution is found, no backtrack is needed, set backtraced to false
+                    c++;                //Moves to the next column
+                    break;              //Breaks out of the row loop
+                }
+            }
+        }
+        counter++;
+        backtrack(q,c,n,b,counter);  //After it prints out the current solution, backtracks to find other possible combinations.
+        backtracked=true;   //Backtracked inside the print function, set backtracked to true.
+        }
+}
+
+bool ok (int q[],int n, int c){
+    for (int i=0; i<c;i++)      //One dimensional row and diagonal tests.
+        if(q[i]/n+q[i]%n==q[c]/n+q[c]%n || q[i]/n-q[i]%n==q[c]/n-q[c]%n)
+            return false;
+    return true;
+}
+
+void backtrack(int q[], int &c, int n, int b, int counter){
+    c--;    //Goes back one column and find a possible solution
+    if (c==-1){ //If c reaches -1, no more solution can be found, exit the program.
+        cout<<"# of rows and colums of the chessboard is: "<<n<<endl;
+        cout<<"# of bishops is:  "<<b<<endl;
+        cout<<"# of solutions is: "<<counter<<endl<<endl;
+        delete []q;
+        cout<<"Input the number of rows and colums of the chessboard."<<endl;
+        cin>>n;
+        if (n==-1)
+        exit(1);
+    }
+}
